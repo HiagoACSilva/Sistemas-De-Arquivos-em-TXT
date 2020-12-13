@@ -1,7 +1,7 @@
 #include "SA.h"
 #include <stdlib.h>
 #include <stdio.h>
-
+#include <string.h>
 FILE *SA;
 char palavra[100];
 void CRIAR(){
@@ -14,7 +14,7 @@ void LISTAR(int MAX){
     int status=TRUE;
     while(status==TRUE){
         fscanf(SA, "%s", palavra);
-        if(cont == MAX){
+        if(cont >= MAX){
             fclose(SA);
             status=FALSE;
         }else{
@@ -28,19 +28,12 @@ void LISTAR(int MAX){
         }
     }
 }
-void ADICIONAR(char *ARQUIVO, char *CONTEUDO, char *TAMANHO, char *INICIO){
-    SA=fopen("Teste.txt","a");
-    fputs(ARQUIVO, SA);
-    fputs(CONTEUDO, SA);
-    fputs(TAMANHO, SA);
-    fputs(INICIO, SA);
-    fclose(SA);
-}
+
 int QuantBloco(char *Entrada){
     int cont = 0;
     while(TRUE){
         if(Entrada[cont]==NULL){
-            return cont;
+            return cont-1;
         }else{
             cont++;
         }
@@ -67,4 +60,46 @@ int linhas () {
 
     fclose(arq);
     return vezes;
+}
+void Quebra(char s[]){
+    int i = 0;
+
+    while (s[i] != '\0') {
+        i++;
+    }
+    s[i]='\n';
+    s[i+1]='\0';
+}
+void ULTIMO(int MAX, char *NOME, char *CONTEUDO){
+    SA=fopen("Teste.txt","r");
+    int cont=0, ho, re;
+    int status=TRUE;
+    while(status==TRUE){
+        fscanf(SA, "%s", palavra);
+        if(cont >= MAX-4){
+            fscanf(SA, "%s", palavra);
+            fscanf(SA, "%s", palavra);
+            ho=atoi(palavra);
+            fscanf(SA, "%s", palavra);
+            re=atoi(palavra);
+            fclose(SA);
+            status=FALSE;
+        }
+        cont++;
+    }
+    SA=fopen("Teste.txt","a");
+    fputs(NOME, SA);
+    fputs(CONTEUDO, SA);
+    char buf[10];
+    int QUANTIDADE=QuantBloco(CONTEUDO);
+    sprintf(buf,"%i", QUANTIDADE);
+    printf("\nQUANTIDADE: %s\n",buf);
+    Quebra(buf);
+    fputs(buf, SA);
+    int INICIAL=ho+re;
+    sprintf(buf,"%i", INICIAL);
+    Quebra(buf);
+    printf("INICIO: %s\n",buf);
+    fputs(buf, SA);
+    fclose(SA);
 }
