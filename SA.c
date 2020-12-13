@@ -49,7 +49,6 @@ int linhas () {
 
     arq = fopen("Teste.txt","r");
 
-        //Lendo o arquivo 1 por 1
         while(fread (&c, sizeof(char), 1, arq)) {
             if(c == letra) {
                 vezes++;
@@ -103,3 +102,21 @@ void ULTIMO(int MAX, char *NOME, char *CONTEUDO){
     fputs(buf, SA);
     fclose(SA);
 }
+void READ(char NOME[], int Max){
+    SA=fopen("Teste.txt","r");
+    int cont = 0;
+    int status=TRUE;
+    while(status==TRUE && cont < Max){
+        fscanf(SA, "%s", palavra);
+        Quebra(palavra);
+        if(strcmp(NOME,palavra)==0){
+            fscanf(SA, "%s", palavra);
+            printf(palavra);
+            fclose(SA);
+            status=FALSE;
+        }
+        cont++;
+    }
+    fclose(SA);
+}
+
