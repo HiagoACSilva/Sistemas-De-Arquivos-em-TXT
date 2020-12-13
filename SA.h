@@ -4,9 +4,12 @@
 #define FALSE 0
 #define LIMITE_BLOCO 1000
 
-
+void LISTAR(int MAX);
+int QuantBloco(char *Entrada);
+int linhas ();
+void Quebra(char s[]);
 void CRIAR();
-void ADICIONAR(char*, char*, char*, char*);
-int QuantBloco(char *);
-
+void ULTIMO(int MAX, char *NOME, char *CONTEUDO);
+void READ(char NOME[], int Max);
+void Sistema();
 #endif // SA_H

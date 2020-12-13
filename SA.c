@@ -2,34 +2,36 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-FILE *SA;
-char palavra[100];
-void CRIAR(){
-    SA=fopen("Teste.txt","w");
+//VARIAVEIS GLOBAIS
+FILE *SA; //PONTEIRO GLOBAL
+char palavra[100];//APENAS UM CHAR PARA PEGAR VALORES NAS FUNÇÕES
+void CRIAR(){//CRIA UM ARQUIVO
+    SA=fopen("SO.txt","w");
     fclose(SA);
 }
-void LISTAR(int MAX){
-    SA=fopen("Teste.txt","r");
+void LISTAR(int MAX){//FUNÇÃO QUE LISTA OS ARQUIVOS
+    SA=fopen("SO.txt","r");
     int cont=0;
     int status=TRUE;
-    while(status==TRUE){
-        fscanf(SA, "%s", palavra);
-        if(cont >= MAX){
-            fclose(SA);
-            status=FALSE;
+    while(status==TRUE){//ENQUANTO VERDADEIRO
+        fscanf(SA, "%s", palavra);//VAI PARA UMA LINHA
+        if(cont >= MAX){//ENQUANTO O CONTADOR CHEGAR NO MAX DE LINHAS
+            fclose(SA);//O ARQUIVO FECHA
+            status=FALSE;//E O STATUS FICA FALSO, TERMINANDO A FUNÇÃO
         }else{
-            printf("%s\t",palavra);
-            fscanf(SA, "%s", palavra);
-            fscanf(SA, "%s", palavra);
-            printf("%s\t",palavra);
-            fscanf(SA, "%s", palavra);
-            printf("%s\n",palavra);
-            cont+=4;
+            printf("%s\t",palavra);//SENAO ELE PRINTA O NOME DO ARQUIVO
+            fscanf(SA, "%s", palavra);//PULA O CONTEUDO
+            fscanf(SA, "%s", palavra);//PEGA O TAMANHO
+            printf("%s\t",palavra);//IMPRIME O TAMANHO
+            fscanf(SA, "%s", palavra);//PEGA O INICIO
+            printf("%s\n",palavra);//IMPRIME O INICIO
+            cont+=4;//E O CONTADOR SOMA +4
         }
     }
 }
 
-int QuantBloco(char *Entrada){
+int QuantBloco(char *Entrada){//FUNÇÃO QUE RETORNA A QUANTIDADE DE BLOCOS USADOS POR ARQUIVO
+    //A QUANTIDADE DE BLOCOS FICOU DEFINIDA POR, CADA LINHA REMETE A UM BLOCO
     int cont = 0;
     while(TRUE){
         if(Entrada[cont]==NULL){
@@ -39,7 +41,7 @@ int QuantBloco(char *Entrada){
         }
     }
 }
-int linhas () {
+int linhas () {//RETORNA O NUMERO MAX DE LINHAS
 
     FILE *arq;
 
@@ -47,7 +49,7 @@ int linhas () {
 
     int vezes;
 
-    arq = fopen("Teste.txt","r");
+    arq = fopen("SO.txt","r");
 
         while(fread (&c, sizeof(char), 1, arq)) {
             if(c == letra) {
@@ -55,12 +57,10 @@ int linhas () {
             }
         }
 
-    printf("\nLinhas: %i\n",vezes);
-
     fclose(arq);
     return vezes;
 }
-void Quebra(char s[]){
+void Quebra(char s[]){//FUNÇÃO PARA ADICIONAR \n NAS PALAVRAS PARA NÃO HAVER ALGUM ERRO NA HORA DA COMPARAÇÃO
     int i = 0;
 
     while (s[i] != '\0') {
@@ -69,24 +69,24 @@ void Quebra(char s[]){
     s[i]='\n';
     s[i+1]='\0';
 }
-void ULTIMO(int MAX, char *NOME, char *CONTEUDO){
-    SA=fopen("Teste.txt","r");
-    int cont=0, ho, re;
+void ULTIMO(int MAX, char *NOME, char *CONTEUDO){//FUNÇÃO QUE ADICIONA UM ARQUIVO
+    SA=fopen("SO.txt","r");;//PRIMEIRO ABRE O ARQUIVO COMO LEITURA PARA PEGAR OS VALORES DO ULTIMO ARQUIVO SALVO
+    int cont=0, TAMANHO, INICIO;
     int status=TRUE;
     while(status==TRUE){
         fscanf(SA, "%s", palavra);
         if(cont >= MAX-4){
             fscanf(SA, "%s", palavra);
             fscanf(SA, "%s", palavra);
-            ho=atoi(palavra);
+            TAMANHO=atoi(palavra);
             fscanf(SA, "%s", palavra);
-            re=atoi(palavra);
+            INICIO=atoi(palavra);
             fclose(SA);
             status=FALSE;
         }
         cont++;
-    }
-    SA=fopen("Teste.txt","a");
+    }//DEPOIS O ARQUIVO É ABERTO PARA ADICIONAR AS INFORMAÇÕES DO NOVO ARQUIVO
+    SA=fopen("SO.txt","a");
     fputs(NOME, SA);
     fputs(CONTEUDO, SA);
     char buf[10];
@@ -95,15 +95,15 @@ void ULTIMO(int MAX, char *NOME, char *CONTEUDO){
     printf("\nQUANTIDADE: %s\n",buf);
     Quebra(buf);
     fputs(buf, SA);
-    int INICIAL=ho+re;
+    int INICIAL=TAMANHO+INICIO;
     sprintf(buf,"%i", INICIAL);
     Quebra(buf);
     printf("INICIO: %s\n",buf);
     fputs(buf, SA);
     fclose(SA);
 }
-void READ(char NOME[], int Max){
-    SA=fopen("Teste.txt","r");
+void READ(char NOME[], int Max){//FUNÇÃO QUE LE O CONTEUDO DO ARQUIVO ESPECIFICADO
+    SA=fopen("SO.txt","r");
     int cont = 0;
     int status=TRUE;
     while(status==TRUE && cont < Max){
@@ -119,4 +119,31 @@ void READ(char NOME[], int Max){
     }
     fclose(SA);
 }
-
+void Sistema(){//LOOP DO PROGRAMA
+    char ESCOLHA[LIMITE_BLOCO];
+    char NOME[LIMITE_BLOCO];
+    char CONTEUDO[LIMITE_BLOCO];
+    while(TRUE){
+        printf("\nLISTA DE COMANDOS:\nls:\tListar\nmore:\tMostrar conteudo do arquivo\ncat:\tAdicionar Arquivo\nDigite Sair para sair do programa\n");
+        fgets(ESCOLHA,LIMITE_BLOCO,stdin);
+        if(strcmp(ESCOLHA,"cat\n")==0){
+            printf("\nDigite o nome do arquivo:\t");
+            fgets(NOME,LIMITE_BLOCO,stdin);
+            printf("\nDigite o conteudo do arquivo: \t");
+            fgets(CONTEUDO,LIMITE_BLOCO,stdin);
+            ULTIMO(linhas(),NOME,CONTEUDO);
+            printf("Conteudo Criado\n");
+        }else if(strcmp(ESCOLHA,"ls\n")==0){
+            LISTAR(linhas());
+            printf("\nLISTAGEM FEITA\n");
+        }else if(strcmp(ESCOLHA,"more\n")==0){
+            printf("\nDigite o Arquivo:\t");
+            fgets(NOME,LIMITE_BLOCO,stdin);
+            READ(NOME,linhas());
+        }else if(strcmp(ESCOLHA,"Sair\n")==0){
+            exit(-1);
+        }else{
+            printf("\nComando Invalido\n");
+        }
+    }
+}
